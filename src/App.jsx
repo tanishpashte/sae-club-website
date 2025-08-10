@@ -1,16 +1,16 @@
 // src/App.jsx
 import { Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 function App() {
   return (
     <div className="bg-gray-900">
-      {/* Navbar will go here */}
       <Navbar />
       <main>
-        <Outlet /> {/* This is where our page components will be rendered */}
+        <Outlet /> 
       </main>
-      {/* Footer will go here */}
+      <Footer />
     </div>
   );
 }
