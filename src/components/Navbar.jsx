@@ -1,8 +1,8 @@
 // src/components/Navbar.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Import useEffect
 import { motion, AnimatePresence } from 'framer-motion';
 
-// You can use a library like 'react-icons' for the menu and close icons
+// --- Icon components remain the same ---
 const MenuIcon = (props) => (
   <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -18,6 +18,7 @@ const CloseIcon = (props) => (
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false); // --- ADD THIS LINE ---
 
   const navLinks = [
     { title: 'About', href: '#about' },
@@ -27,13 +28,37 @@ const Navbar = () => {
     { title: 'Sponsors', href: '#sponsors' },
   ];
 
+  // --- ADD THIS ENTIRE useEffect HOOK ---
+  useEffect(() => {
+    const handleScroll = () => {
+      // Check if user has scrolled more than 50px
+      if (window.scrollY > 50) {
+        setHasScrolled(true);
+      } else {
+        setHasScrolled(false);
+      }
+    };
+
+    // Add event listener when the component mounts
+    window.addEventListener('scroll', handleScroll);
+
+    // Remove event listener when the component unmounts
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []); // Empty dependency array means this effect runs only once on mount
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full z-50 transition-colors duration-300">
+      {/* --- MODIFY THIS LINE --- */}
+      <header 
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 
+        ${hasScrolled ? 'bg-black/70 backdrop-blur-sm shadow-lg' : 'bg-transparent'}`}
+      >
         <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
           {/* Logo */}
           <div className="text-2xl font-bold text-white">
@@ -62,7 +87,7 @@ const Navbar = () => {
         </nav>
       </header>
 
-      {/* Mobile Menu */}
+      {/* --- Mobile Menu remains the same --- */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
